@@ -182,6 +182,12 @@ define([
                 max: chartOpt.maxRetracements
             });
 
+            // ANKITZ 
+            this.trendlinesIndicatorList = new TrendlinesList(null, {
+                max: chartOpt.maxTrendlines
+            });
+
+
             //binding the correct context to the view functions
             //This makes sure that all the listed methods get this as their context
             _.bindAll(this, 'loadWidget', 'add_mainChart', 'getChartRef',
@@ -196,6 +202,13 @@ define([
                 'change_chartType', 'toggle_events',
                 'add_draw', 'remove_draw', 'toggle_draw',
                 'start_drawlines', 'drag_drawlines', 'remove_allDrawInstances',
+
+                //ANKITZ - trendlines On Indicator
+                'start_drawlines_on_indicator', 'drag_drawlines_on_indicator',
+                'add_trendlines_on_indicator', 'add_trendlines_to_indicator',
+                'remove_trendlines_on_indicator',
+
+
                 'add_crosshairs', 'remove_crosshairs',
                 'add_trendlines', 'remove_trendlines',
                 'add_retracements', 'remove_retracements',
@@ -218,6 +231,9 @@ define([
             this.listenTo(seriesList, 'remove-view', this.remove_compare);
 
             this.listenTo(this.trendlinesList, 'warn', _.bind(messenger.warn, messenger));
+
+            // ANKITZ
+            this.listenTo(this.trendlinesIndicatorList, 'warn', _.bind(messenger.warn, messenger));
             this.listenTo(this.crosshairsList, 'warn', _.bind(messenger.warn, messenger));
 
             this.listenTo(settings, 'clicked unclicked', function(model, value) {
@@ -772,8 +788,6 @@ define([
             this.remaining.serieName = storedSettings.serieName;
 
 
-
-
             //for submenus
             returns.submenusSelected = _.union(flags, [chartType], [lineType], [drawType]);
 
@@ -1006,6 +1020,8 @@ define([
                 flags: this.flags,
                 crosshairs: this.crosshairsList,
                 trendlines: this.trendlinesList,
+                // ANKITZ
+                trendlinesIndicatorList: this.trendlinesIndicatorList,
                 retracements: this.retracementsList,
                 callback: _.bind(function(chartRef) {
 
@@ -1832,6 +1848,15 @@ define([
                         view: indicatorView
                     });
 
+                    var isTrendlineEnabled = view1.submenusList.find(function(item) {
+                        return item.get('value') == "Trendline"
+                    });
+
+                    if (isTrendlineEnabled.get('selected') && view1.config.chart.allowTrendlineOnIndicators) {
+                        view1.add_trendlines_to_indicator({}, indicator);
+                    }
+
+
                 } catch (e) {
                     error = e;
                     message = e.message;
@@ -2202,7 +2227,8 @@ define([
             if (param && param.coord && param.coord.x && param.coord.y) {
                 var len = collection.length;
                 collection.add({
-                    init: param
+                    init: param,
+                    type: 'mainChart'
                 });
                 var newLen = collection.length;
 
@@ -2397,6 +2423,7 @@ define([
                     message,
                     skipMsg = args.skipMsg || false,
                     error = false,
+                    config = this.config,
                     hasInstances = this.trendlinesList.length;
 
                 if (!hasInstances) {
@@ -2416,6 +2443,18 @@ define([
                 } else {
                     throw new Error('Unable to delete all trendlines');
                 }
+
+
+                // ANKITZ
+                if ((this.trendlinesIndicatorList && this.trendlinesIndicatorList.length > 0) && config.chart.allowTrendlineOnIndicators) {
+
+
+                    this.remove_trendlines_on_indicator();
+                    //this.trendlinesIndicatorList.reset();
+
+                }
+
+
             } catch (e) {
                 error = e;
                 msgType = 'error';
@@ -2576,6 +2615,7 @@ define([
                 var subtype = (typeof args.param === 'string') ? args.param : args.attr && args.attr.subtype,
                     chartView = this.mainChartView,
                     chart = this.getChartRef(),
+                    config = this.config,
                     container = chart && chart.container,
                     eventMap = this.eventMap,
                     start = eventMap.start,
@@ -2589,6 +2629,33 @@ define([
                 switch (subtype) {
                     case 'none':
                         chartView.reBindEvent(handles);
+
+                        if (config.chart.allowTrendlineOnIndicators) {
+
+
+                            this.indicatorsList.each(function(model) {
+
+                                var indicatorID = 'section#' + model.get('id');
+                                var indicatorChartRef = model.view.chartRef;
+                                var indicatorContainer = indicatorChartRef.container;
+
+
+                                indicatorContainer[handles] = model.get('moveHandler');
+
+
+                                chartView.reBindEvent.call({
+                                    defaultHandlers: chartView.defaultHandlers,
+                                    chartRef: {
+                                        container: indicatorContainer
+                                    }
+                                }, handles);
+
+                            }, this);
+
+
+                        }
+
+
                         break;
 
                     case 'trendline':
@@ -2603,36 +2670,17 @@ define([
                         }, this.event_handler);
                         $(container).bind(stop, {
                             callback: this.add_trendlines,
+
                             chart: chart
                         }, this.event_handler);
 
 
-
-                        //BINDING EVENTS FOR SUB-TRENDLINE
-                        this.indicatorsList.each(function(model) {
-
-                            var indicatorID = 'section#' + model.get('id');
-
-
-                            var indicatorContainer = $(model.get('ref')).find('.highcharts-container');
-
-                            $(indicatorContainer).bind(start, {
-                                callback: this.start_drawlines,
-                                chart: model.view.chartRef,
-                                collection: this.trendlinesList,
-                                eventType: 'trendline'
-                            }, this.event_handler);
-
-
-
-                            $(container).bind(stop, {
-                                callback: this.add_trendlines,
-                                chart: model.view.chartRef
-                            }, this.event_handler);
-
-
-                        }, this);
-
+                        //BINDING EVENTS FOR INDICATORS CHARTS
+                        if (config.chart.allowTrendlineOnIndicators) {
+                            this.indicatorsList.each(function(model) {
+                                this.add_trendlines_to_indicator(args, model);
+                            }, this);
+                        }
 
 
                         //$(container).on('touchend', {callback: this.add_trendlines, chart: chart}, this.event_handler);
@@ -2686,6 +2734,211 @@ define([
             }
         },
 
+
+        add_trendlines_to_indicator: function(args, indicatorModel) {
+            try {
+
+                args = args || {};
+
+                // var subtype = (typeof args.param === 'string') ? args.param : args.attr && args.attr.subtype,
+                //     chartView = this.mainChartView,
+                //     chart = this.getChartRef(),
+                //     config = this.config,
+                //     container = chart && chart.container,
+                //     //touch devices has three events
+                //     error = false,
+                //     msgType = 'success',
+                //     customMsg = '';
+
+
+                var eventMap = this.eventMap,
+                    start = eventMap.start,
+                    move = eventMap.move,
+                    stop = eventMap.stop,
+                    handles = this.isTouch ? ['on' + start, 'on' + move, 'onmousemove', 'onmousedown', 'touchend'] : ['on' + move];
+
+                var indicatorID = 'section#' + indicatorModel.get('id');
+                var indicatorChartRef = indicatorModel.view.chartRef;
+                var indicatorContainer = indicatorChartRef.container;
+
+
+                // Saving the Highchart onMove function on the model itself
+                // It will be useful when rebinding the function
+                indicatorModel.set('moveHandler', indicatorContainer[handles]);
+
+                indicatorContainer[handles] = function(evt) {
+                    evt.preventDefault();
+                    return false;
+                };
+
+
+                // STEP1: UNBIND MOUSEMOVE
+                // UNBIND MOUSEMOVE ON TRENDLINE  
+                // chartView.unBindEvent.call({
+                //     defaultHandlers: _.clone(chartView.defaultHandlers),
+                //     chartRef: {
+                //         container: indicatorContainer
+                //     }
+                // }, handles);
+
+
+                // STEP2: BIND MOUSE DOWN
+                $(indicatorContainer).bind(start, {
+                    callback: this.start_drawlines_on_indicator,
+                    chart: indicatorChartRef,
+                    collection: this.trendlinesIndicatorList,
+                    eventType: 'trendlineIndicator'
+                }, this.event_handler);
+
+
+                // STEP3: BIND MOUSE UP AND CREATE A LINE SERIES AND APPEND TO indicatorChartRef
+                $(indicatorContainer).bind(stop, {
+                    callback: this.add_trendlines_on_indicator,
+                    chart: indicatorChartRef
+                }, this.event_handler);
+
+
+            } catch (e) {
+                error = e;
+                msgType = 'error';
+            }
+
+
+        },
+
+        remove_trendlines_on_indicator: function() {
+
+
+            this.trendlinesIndicatorList.each(function(model) {
+
+                var chartRef = model.get('ref');
+
+                if (chartRef.remove) {
+                    chartRef.remove(true)
+                }
+
+            }, this);
+
+            var that = this;
+            setTimeout(function() {
+                that.trendlinesIndicatorList.reset()
+            }, 1000);
+
+
+        },
+        /**
+         *  This function is used by trendlines & retracements to start drawing the lines.
+         *  The actual drawing of lines is handled by respective models when they are initialized. It even adds event listeners for dragging
+         *
+         *  @method start_drawlines
+         *  @param {Object} args
+         *  @private
+         */
+        start_drawlines_on_indicator: function(args) {
+            //<i>this</i> is bound to the stockwidget_view object
+            args = args || {};
+            // console.log(args, 'start_drawlines');
+            var param = args.param,
+                context = args.context,
+                chart = args.chart,
+                collection = args.collection;
+
+            if (param && param.coord && param.coord.x && param.coord.y) {
+                var len = collection.length;
+                collection.add({
+                    init: param,
+                    type: 'indicatorChart'
+                });
+                var newLen = collection.length;
+
+                if (newLen > len || collection.update) {
+                    //attach a new mousemove event
+                    $(context).bind(this.eventMap.move, {
+                        callback: this.drag_drawlines_on_indicator,
+
+                        chart: chart,
+                        collection: collection
+                    }, this.event_handler);
+                }
+            }
+        },
+
+        /**
+         *  Used Internally for dragging lines. Calls the drag method of the current model
+         *
+         *  @method drag_drawlines
+         *  @param {Object} args
+         *  @private
+         */
+        drag_drawlines_on_indicator: function(args) {
+            args = args || {};
+            var param = args.param,
+                context = args.context,
+                chart = args.chart,
+                collection = args.collection;
+
+
+            if (param && param.coord && param.coord.x && param.coord.y) {
+                var model = collection.getCurrent();
+                if (model) {
+                    model.drag(param);
+                    model.draw(args.chart.renderer, param);
+                }
+            }
+        },
+        add_trendlines_on_indicator: function(args) {
+            //unbind mousemove, if any
+            try {
+                //console.log("In Add trendlines");
+                args = args || {};
+                var param = args.param,
+                    context = args.context,
+                    chart = args.chart,
+                    collection = args.collection;
+
+                if (context) {
+                    $(context).unbind(this.eventMap.move, this.event_handler);
+                }
+
+                if (param instanceof Array) {
+                    this.trendlinesIndicatorList.add(param, args.redraw);
+
+                } else if (param && param.coord && !_.isUndefined(param.coord.x && param.coord.y)) {
+                    var model = this.trendlinesIndicatorList.getCurrent();
+
+                    //console.log("Add trendlines", model);
+                    if (model) {
+                        model.final(param);
+                        // ANKITZ - Calling the Model's 'insert' function manually with the Highchart Context & final param
+                        model.insert(args.chart, param);
+                        if (this.stateModel) {
+                            var priSerie = this.model.getPrimarySerie()
+                            this.stateModel.updateSerie(priSerie.get('name'));
+                            this.stateModel.add('trendlines', model.pluckState());
+                        }
+                    }
+                }
+            } catch (e) {
+                this.messenger.error({
+                    msg: e.message,
+                    on: "adding trendlines",
+                    data: param,
+                    error: e
+                });
+            }
+        },
+
+        /**
+         *  This method adds x,y crosshair lines on the chart & even updates the localStorage. Used Internally.
+         *  This function is invoked in two ways-
+         *      1. Through the 'mouseup' event/user interaction on the chart
+         *      2. Through uploadSelection (any prev crosshairs) stored in the localStorage
+         *
+         *  @method add_crosshairs
+         *  @param {Object} args
+         *  @private
+         */
+
         /**
          *  This method removes the chart from a particular mode. It undoes the changes made for that mode through the above add_draw method
          *
@@ -2698,6 +2951,7 @@ define([
             var subtype = args.attr && args.attr.subtype,
                 chart = this.getChartRef(),
                 container = chart && chart.container,
+                config = this.config,
                 start = this.eventMap.start,
                 stop = this.eventMap.stop;
 
@@ -2708,6 +2962,20 @@ define([
                 case 'trendline':
                     $(container).unbind(start, this.event_handler);
                     $(container).unbind(stop, this.event_handler);
+
+                    if (config.chart.allowTrendlineOnIndicators) {
+
+                        this.indicatorsList.each(function(model) {
+
+                            var indicatorID = 'section#' + model.get('id');
+                            var indicatorChartRef = model.view.chartRef;
+                            var indicatorContainer = indicatorChartRef.container;
+
+                            $(indicatorContainer).unbind(start, this.event_handler);
+                            $(indicatorContainer).unbind(stop, this.event_handler);
+
+                        }, this);
+                    }
                     break;
 
                 case 'crosshair':
@@ -4019,7 +4287,6 @@ define([
                                     isHist: isHist,
                                     newRange: newRange
                                 });
-
 
 
                                 //update series
