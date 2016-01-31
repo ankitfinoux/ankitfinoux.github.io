@@ -2813,7 +2813,7 @@ define([
 
                 var chartRef = model.get('ref');
 
-                if (chartRef.remove) {
+                if (chartRef && chartRef.remove) {
                     chartRef.remove(true)
                 }
 
