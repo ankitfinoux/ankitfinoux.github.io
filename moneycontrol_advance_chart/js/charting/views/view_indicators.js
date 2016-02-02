@@ -37,6 +37,7 @@ define([
             this.decimals = _.isUndefined(attr.decimals) ? chartOpt.decimals : attr.decimals;
 
 
+            //ANKITZ
             // ADDING THIS VIEWS REFRENCE ON THE MODEL ITSELF FOR LATER PURPOSES
             this.model.view = this;
             //setting the INDICATOR'S DOM node on the MODEL for refrence
@@ -242,7 +243,15 @@ define([
                     tickPixelInterval: 40,
                     gridLineColor: '#dadada',
                     maxPadding: 0.2,
-                    minPadding: 0.1,
+                    minPadding: 0.02,
+                    //S.K
+                    offset: options.config.chart.yAxisIndicatorOffset || 50,
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        y: 6
+                    },
+                    showLastLabel: true,
                     labels: {
                         style: {
                             color: '#999',

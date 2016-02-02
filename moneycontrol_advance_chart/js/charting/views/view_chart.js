@@ -1,5 +1,5 @@
 /**
- *	/js/views/view_series.js
+ *  /js/views/view_series.js
  */
 
 define([
@@ -128,11 +128,11 @@ define([
                     //Switch ON Grouping only for week if groupingWeek is passed in the config
                     //This handles chart onLoad grouping 
                     /*if(newTimeRange === week && dataGrouping.unitsWeek){
-								dataGrouping = _.extend(dataGrouping, {
-									enabled	: true,
-									units 	: dataGrouping.unitsWeek
-								});
-							}*/
+                                dataGrouping = _.extend(dataGrouping, {
+                                    enabled : true,
+                                    units   : dataGrouping.unitsWeek
+                                });
+}*/
 
                     //BUG FIX: Handling empty Week and / or Intra data
                     var allData = _.flatten(_.pluck(graphObj, 'data'), true),
@@ -269,9 +269,9 @@ define([
         },
 
         /**
-         *	This method adds a series to the chart.
-         *	@method addSeries
-         *	@private
+         *  This method adds a series to the chart.
+         *  @method addSeries
+         *  @private
          */
         addSeries: function(args) {
             var params = args.param,
@@ -361,7 +361,7 @@ define([
                     // prevent duplicates; length remains same if duplicate
                     newSerie.getRangeData({
                         newTimeRange: currRange,
-                        //	updateRange  : true,
+                        //  updateRange  : true,
                         callback: args.callback,
                         onLoad: model.get('onLoad')
                     });
@@ -433,7 +433,7 @@ define([
         },
 
         /**
-         *	This method reads the values of series when in compare mode
+         *  This method reads the values of series when in compare mode
          */
         updateReadings: function(index) {
             var isHist = this.model.isHist();
@@ -486,7 +486,7 @@ define([
         },
 
         /**
-         *	This method reads the OHLC values of the main series when not in compare mode
+         *  This method reads the OHLC values of the main series when not in compare mode
          */
         updateOHLCReadings: function(serie, eindex) {
             // This will be called only when the chart isHist
@@ -669,7 +669,10 @@ define([
 
                     if (container[handle] && container[handle] !== this.preventDefault) {
                         this.defaultHandlers[handle] = container[handle];
-                        container[handle] = /ontouchmove|touchend/.exec(handle) ? null : this.preventDefault;
+                        container[handle] = /ontouchmove|touchend/.exec(handle) ? null : this.preventDefault || function(evt) {
+                            evt.preventDefault();
+                            return false;
+                        };
                     }
                 }
             }
@@ -715,7 +718,7 @@ define([
         },
 
         /**
-         *	This method is called when the draw instance is about to get inserted
+         *  This method is called when the draw instance is about to get inserted
          */
         insert_lines: function(model, value) {
             model.insert(this.chartRef, value, this.decimals);

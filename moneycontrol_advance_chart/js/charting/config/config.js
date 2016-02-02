@@ -134,6 +134,11 @@ define(function() {
             maxCrosshairs: 5,
             maxTrendlines: 20,
 
+            // ANKITZ
+            yAxisOffset: 50,
+            yAxisIndicatorOffset: 50,
+
+
             primary_chartName: 'main',
 
             //operations    : ['add', 'remove', 'change', 'toggle'], 
@@ -344,8 +349,8 @@ define(function() {
                 //custom: true,
                 xAxis: {
                     id: 'navigator-x-axis', //IMP DO NOT DELETE THIS KEY, deleting this key will make the navigator width 100% as normal
-                    relativeWidth: 0.39,
-                    relativeLeftPadding: 0.61
+                    relativeWidth: 0.42,
+                    relativeLeftPadding: 0.65
                 }
             },
             plotOptions: {
@@ -379,10 +384,10 @@ define(function() {
                     marker: {
                         symbol: 'circle'
                             /*,
-                                                    fillColor: 'white',
-                                                    lineWidth: 2,
-                                                    lineColor: null
-                                                    */
+                                                                                                                    fillColor: 'white',
+                                                                                                                    lineWidth: 2,
+                                                                                                                    lineColor: null
+                                                                                                                    */
                     }
                 }
             },
@@ -440,6 +445,16 @@ define(function() {
                 maxPadding: 0.2,
                 minPadding: 0.02,
                 gridLineDashStyle: 'longdash',
+
+                //ANKITZ
+                offset: 50,
+                labels: {
+                    align: 'left',
+                    x: 3,
+                    y: 6
+                },
+
+
 
                 labels: {
                     style: {
@@ -613,13 +628,13 @@ define(function() {
                     enabled: true,
                     title: 'Accum-Distribtn'
                         /*,
-                                            signalLines: [{
-                                                type: 'sma',
-                                                param: {
-                                                    window  : 20
-                                                },
-                                                title: 'SMA'
-                                            }]*/
+                                                                                                            signalLines: [{
+                                                                                                                type: 'sma',
+                                                                                                                param: {
+                                                                                                                    window  : 20
+                                                                                                                },
+                                                                                                                title: 'SMA'
+                                                                                                            }]*/
                 }, {
                     id: 'adx',
                     value: 'Average Directional Index (ADX)',
@@ -908,11 +923,11 @@ define(function() {
                     enabled: true,
                     shape: 'url(./images/charting/bonus.png)'
                         /*  style   :{
-                        'background-position' : '0px -248px',
-                        width: 26,
-                        height: 33
-                    },
-                    sprite_pos : '0px -248px'*/
+                                                                                        'background-position' : '0px -248px',
+                                                                                        width: 26,
+                                                                                        height: 33
+                                                                                    },
+                                                                                    sprite_pos : '0px -248px'*/
                 }, {
                     id: 'dividends',
                     value: 'Dividends',
@@ -920,11 +935,11 @@ define(function() {
                     enabled: true,
                     shape: 'url(./images/charting/dividends.png)'
                         /*  style   :{
-                        'background-position' : '0px -248px',
-                        width: 26,
-                        height: 33
-                    },
-                    sprite_pos : '0px -248px'*/
+                                                                                        'background-position' : '0px -248px',
+                                                                                        width: 26,
+                                                                                        height: 33
+                                                                                    },
+                                                                                    sprite_pos : '0px -248px'*/
                 }, {
                     id: 'rights',
                     value: 'Rights',
