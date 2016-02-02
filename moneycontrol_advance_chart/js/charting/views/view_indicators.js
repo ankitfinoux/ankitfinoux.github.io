@@ -244,11 +244,7 @@ define([
                     gridLineColor: '#dadada',
                     maxPadding: 0.2,
                     minPadding: 0.02,
-<<<<<<< HEAD
                     //S.K
-=======
-                    //ANKITZ
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                     offset: options.config.chart.yAxisIndicatorOffset || 50,
                     labels: {
                         align: 'left',

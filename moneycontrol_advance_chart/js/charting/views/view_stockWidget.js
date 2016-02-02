@@ -203,11 +203,7 @@ define([
                 'add_draw', 'remove_draw', 'toggle_draw',
                 'start_drawlines', 'drag_drawlines', 'remove_allDrawInstances',
 
-<<<<<<< HEAD
                 //S.K - trendlines On Indicator
-=======
-                //ANKITZ - trendlines On Indicator
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                 'start_drawlines_on_indicator', 'drag_drawlines_on_indicator',
                 'add_trendlines_on_indicator', 'add_trendlines_to_indicator',
                 'remove_trendlines_on_indicator',
@@ -236,14 +232,9 @@ define([
 
             this.listenTo(this.trendlinesList, 'warn', _.bind(messenger.warn, messenger));
 
-<<<<<<< HEAD
             // S.K
             this.listenTo(this.trendlinesIndicatorList, 'warn', _.bind(messenger.warn, messenger));
 
-=======
-            // ANKITZ
-            this.listenTo(this.trendlinesIndicatorList, 'warn', _.bind(messenger.warn, messenger));
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
             this.listenTo(this.crosshairsList, 'warn', _.bind(messenger.warn, messenger));
 
             this.listenTo(settings, 'clicked unclicked', function(model, value) {
@@ -1030,11 +1021,7 @@ define([
                 flags: this.flags,
                 crosshairs: this.crosshairsList,
                 trendlines: this.trendlinesList,
-<<<<<<< HEAD
                 // S.k
-=======
-                // ANKITZ
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                 trendlinesIndicatorList: this.trendlinesIndicatorList,
                 retracements: this.retracementsList,
                 callback: _.bind(function(chartRef) {
@@ -2459,11 +2446,7 @@ define([
                 }
 
 
-<<<<<<< HEAD
                 // S.K
-=======
-                // ANKITZ
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                 if ((this.trendlinesIndicatorList && this.trendlinesIndicatorList.length > 0) && config.chart.allowTrendlineOnIndicators) {
 
 
@@ -2657,29 +2640,15 @@ define([
                                 var indicatorChartRef = model.view.chartRef;
                                 var indicatorContainer = indicatorChartRef.container;
 
-<<<<<<< HEAD
                                 indicatorContainer[handles] = model.get('moveHandler');
 
-=======
-
-                                indicatorContainer[handles] = model.get('moveHandler');
-
-
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                                 chartView.reBindEvent.call({
                                     defaultHandlers: chartView.defaultHandlers,
                                     chartRef: {
                                         container: indicatorContainer
                                     }
                                 }, handles);
-<<<<<<< HEAD
                             }, this);
-=======
-
-                            }, this);
-
-
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                         }
 
 
@@ -2936,11 +2905,7 @@ define([
                     //console.log("Add trendlines", model);
                     if (model) {
                         model.final(param);
-<<<<<<< HEAD
                         // S.K - Calling the Model's 'insert' function manually with the Highchart Context & final param
-=======
-                        // ANKITZ - Calling the Model's 'insert' function manually with the Highchart Context & final param
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                         model.insert(args.chart, param);
                         if (this.stateModel) {
                             var priSerie = this.model.getPrimarySerie()

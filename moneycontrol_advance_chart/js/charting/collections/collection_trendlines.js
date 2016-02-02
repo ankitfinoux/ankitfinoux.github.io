@@ -29,10 +29,7 @@ define([
                 var next = models[i],
                     isModel = next instanceof this.model;
 
-<<<<<<< HEAD
                 //S.K  
-=======
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
                 var trendLineID = (models[i].type == "indicatorChart") ? 'trendlineIndicator' : 'trendline';
 
 

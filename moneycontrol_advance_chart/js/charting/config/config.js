@@ -80,7 +80,7 @@ define(function() {
             // returnToPreviousChartType:true,    //ankitz :on moving out of compare mode return to previous selected chartType or else use default
             // returnToPreviousLineType:true,
 
-            //ANKITZ
+            //S.K
             allowTrendlineOnIndicators: true, // Setting this to true will allow trendlines to be drawn on the Indicators
 
             //only one entry supported for now, can extend for many later
@@ -386,17 +386,10 @@ define(function() {
                     marker: {
                         symbol: 'circle'
                             /*,
-<<<<<<< HEAD
-                                                                                                                    fillColor: 'white',
-                                                                                                                    lineWidth: 2,
-                                                                                                                    lineColor: null
-                                                                                                                    */
-=======
-                                                                                                                            fillColor: 'white',
-                                                                                                                            lineWidth: 2,
-                                                                                                                            lineColor: null
-                                                                                                                            */
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
+                                                                                                                                        fillColor: 'white',
+                                                                                                                                        lineWidth: 2,
+                                                                                                                                        lineColor: null
+                                                                                                                                        */
                     }
                 }
             },
@@ -462,7 +455,6 @@ define(function() {
                     x: 3,
                     y: 6
                 },
-
 
 
                 labels: {
@@ -637,23 +629,13 @@ define(function() {
                     enabled: true,
                     title: 'Accum-Distribtn'
                         /*,
-<<<<<<< HEAD
-                                                                                                            signalLines: [{
-                                                                                                                type: 'sma',
-                                                                                                                param: {
-                                                                                                                    window  : 20
-                                                                                                                },
-                                                                                                                title: 'SMA'
-                                                                                                            }]*/
-=======
-                                                                                                                    signalLines: [{
-                                                                                                                        type: 'sma',
-                                                                                                                        param: {
-                                                                                                                            window  : 20
-                                                                                                                        },
-                                                                                                                        title: 'SMA'
-                                                                                                                    }]*/
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
+                                                                                                                                signalLines: [{
+                                                                                                                                    type: 'sma',
+                                                                                                                                    param: {
+                                                                                                                                        window  : 20
+                                                                                                                                    },
+                                                                                                                                    title: 'SMA'
+                                                                                                                                }]*/
                 }, {
                     id: 'adx',
                     value: 'Average Directional Index (ADX)',
@@ -942,19 +924,11 @@ define(function() {
                     enabled: true,
                     shape: 'url(./images/charting/bonus.png)'
                         /*  style   :{
-<<<<<<< HEAD
-                                                                                        'background-position' : '0px -248px',
-                                                                                        width: 26,
-                                                                                        height: 33
-                                                                                    },
-                                                                                    sprite_pos : '0px -248px'*/
-=======
-                                                                                                'background-position' : '0px -248px',
-                                                                                                width: 26,
-                                                                                                height: 33
-                                                                                            },
-                                                                                            sprite_pos : '0px -248px'*/
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
+                                                                                                            'background-position' : '0px -248px',
+                                                                                                            width: 26,
+                                                                                                            height: 33
+                                                                                                        },
+                                                                                                        sprite_pos : '0px -248px'*/
                 }, {
                     id: 'dividends',
                     value: 'Dividends',
@@ -962,19 +936,11 @@ define(function() {
                     enabled: true,
                     shape: 'url(./images/charting/dividends.png)'
                         /*  style   :{
-<<<<<<< HEAD
-                                                                                        'background-position' : '0px -248px',
-                                                                                        width: 26,
-                                                                                        height: 33
-                                                                                    },
-                                                                                    sprite_pos : '0px -248px'*/
-=======
-                                                                                                'background-position' : '0px -248px',
-                                                                                                width: 26,
-                                                                                                height: 33
-                                                                                            },
-                                                                                            sprite_pos : '0px -248px'*/
->>>>>>> e9116ef790be4930250ee88dda43056a7dcf41c7
+                                                                                                            'background-position' : '0px -248px',
+                                                                                                            width: 26,
+                                                                                                            height: 33
+                                                                                                        },
+                                                                                                        sprite_pos : '0px -248px'*/
                 }, {
                     id: 'rights',
                     value: 'Rights',
