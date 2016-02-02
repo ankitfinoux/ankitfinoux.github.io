@@ -2427,6 +2427,17 @@ define([
                     config = this.config,
                     hasInstances = this.trendlinesList.length;
 
+
+                // S.K
+                if ((this.trendlinesIndicatorList && this.trendlinesIndicatorList.length > 0) && config.chart.allowTrendlineOnIndicators) {
+
+
+                    this.remove_trendlines_on_indicator();
+                    //this.trendlinesIndicatorList.reset();
+
+                }
+
+
                 if (!hasInstances) {
                     skipMsg = true;
                     return;
@@ -2443,16 +2454,6 @@ define([
                     }
                 } else {
                     throw new Error('Unable to delete all trendlines');
-                }
-
-
-                // S.K
-                if ((this.trendlinesIndicatorList && this.trendlinesIndicatorList.length > 0) && config.chart.allowTrendlineOnIndicators) {
-
-
-                    this.remove_trendlines_on_indicator();
-                    //this.trendlinesIndicatorList.reset();
-
                 }
 
 
